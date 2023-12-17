@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+      .button-widget {
+        position: fixed;
+        font-family: 'inter';
+
+        bottom: 20px;
+
+        right: 20px;
+
+        background-color: rgba(16, 0, 190, 0.878);
+
+        color: #fff;
+
+        border: none;
+        opacity: 95%;
+
+        border-radius: 15px;
+
+        width: 48px;
+
+        height: 48px;
+
+        cursor: pointer;
+        z-index: 999;
+
+        transition: all 0.3s;
+
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      }
+
+      .button-widget:hover {
+        transform: scale(1.05);
+      }
+
+      /* CSS for the larger widget */
+
+      .larger-widget {
+        position: fixed;
+
+        bottom: 90px;
+
+        right: 20px;
+
+        background-color: #ffffffba;
+
+        width: 380px;
+
+        height: 250px;
+
+        z-index: 2;
+
+        transition: opacity 0.3s;
+
+        opacity: 0;
+
+        border-radius: 10px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      }
+
+      .final {
+        font-size: 10px;
+      }
+
+      .interim {
+        font-size: 10px;
+      }
+
+      .speech-container {
+        padding: 20px;
+
+        text-align: center;
+      }
+
+      .speech-button {
+        background-color: #005a9d;
+
+        color: #fff;
+
+        border: none;
+
+        border-radius: 5px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+      }
+
+      .speech-button:hover {
+        background-color: #003b6b;
+      }
+
+      .speech-results {
+        margin-top: 10px;
+
+        font-size: 15px;
+
+        height: 15px;
+      }
+
+      .access-message {
+        display: none;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .container {
+        display: flex;
+
+        justify-content: center; /* Center the content horizontally */
+
+        align-items: center;
+
+        padding: 33px;
+
+        margin-top: 55px;
+      }
+      .bottom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+        /* border: 1px dashed;
+        box-sizing: border-box; */
+      }
+
+      .fa-keyboard {
+        margin-left: auto;
+        margin-right: 80px;
+        width: 5px;
+      }
+
+      .placeholder {
+        width: 5px;
+        visibility: hidden;
+        margin-left: 80px;
+      }
+
+      .powered {
+        font-size: 10px;
+        /* Ensure this element is a direct child of .bottom for it to be centered */
+        /* position: absolute;
+        left: 50%;
+        transform: translateX(-50%); */
+        user-select: none;
+        z-index: 99;
+        font-family: 'inter';
+      }
+
+      .flex {
+        flex: 1;
+      }
+
+      .ball {
+        width: 40px; /* Circle */
+
+        height: 40px; /* Circle */
+
+        border-radius: 50%;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      }
+
+      /* CSS for chat above*/
+      .ai-chat-container {
+        position: fixed;
+        bottom: 380px; /* Fixed bottom position */
+        right: 20px;
+        background-color: #fff; /* Match the larger-widget background */
+        width: 250px; /* Width of the container */
+        max-height: 300px; /* Maximum height before scrolling */
+        overflow-y: auto; /* Add scrollbar for overflow content */
+        z-index: 2;
+        border-radius: 10px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        font-size: 15px;
+        padding: 20px; /* Padding around text */
+        opacity: 0; /* Start with the container hidden */
+        transform: translateY(
+          20px
+        ); /* Start slightly below its final position */
+        transition: all 0.3s ease; /* Transition for smooth appearance */
+        /* Removed fixed height */
+      }
+
+      .ai-chat-container.active {
+        animation: expandAnimation 0.5s ease forwards; /* Apply the expand animation */
+      }
+
+      .ai-response-conatiner {
+        font-size: 14px;
+        user-select: none;
+        font-family: 'inter';
+      }
+
+      .timestamp {
+        color: rgb(107, 107, 110);
+        font-size: 10px;
+      }
+
+      svg {
+        width: 18vw;
+        height: 25vw;
+        position: absolute;
+        z-index: 10;
+      }
+
+      path {
+        mix-blend-mode: plus-lighter;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      .ai-chat-container.fade-out {
+        animation: fadeOut 0.3s ease forwards;
+      }
+
+      @keyframes dilate {
+        0% {
+          transform: scaleY(1);
+        }
+
+        25% {
+          transform: scaleY(1.7);
+        }
+
+        50% {
+          transform: scaleY(1);
+        }
+
+        75% {
+          transform: scaleY(1.7);
+        }
+
+        100% {
+          transform: scaleY(1);
+        }
+      }
+
+      @keyframes expandFromCorner {
+        from {
+          transform: scale(0.2);
+
+          opacity: 0;
+        }
+
+        to {
+          transform: scale(1);
+
+          opacity: 1;
+
+          transform-origin: bottom right;
+        }
+      }
+
+      @keyframes shrinkToCorner {
+        from {
+          transform: scale(1);
+
+          opacity: 1;
+
+          transform-origin: bottom right;
+        }
+
+        to {
+          transform: scale(0.2);
+
+          opacity: 0;
+
+          transform-origin: bottom right;
+        }
+      }
+
+      @keyframes expandAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button class="button-widget" id="openButton"></button>
+    <div class="ai-chat-container" id="aiChatContainer">
+      <div class="ai-response-conatiner" id="aiResponseContainer"></div>
+      <span class="timestamp">Bot · Just now ·</span>
+      <!-- This is where AI responses will go -->
+    </div>
+
+    <div class="larger-widget" id="largerWidget">
+      <p id="accessText" class="access-message">
+        Please allow microphone access to enable voice recognition.
+      </p>
+
+      <div class="speech-container" id="speechContainer">
+        <!-- <div id="interimTranscription" class="speech-results"></div> -->
+
+        <div class="container">
+          <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+            <!-- <path fill="#cc00ff" />
+            <path fill="#ff00cc" />
+            <path fill="#ffff00" />
+            <path fill="#00ffcc" />
+            <path fill="#00ccff" /> -->
+          </svg>
+        </div>
+        <div class="bottom">
+          <div class="placeholder"></div>
+          <div class="flex"></div>
+          <p class="powered">
+            POWERED BY COMMUNICUBE
+            <!-- <a class="link" href="https://www.unicorntwo.com/">UNICORN II</a> -->
+          </p>
+          <div class="flex"></div>
+          <i class="fa-regular fa-keyboard"></i>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const oscs = [];
+      const startTime = Date.now();
+      class RandomOscillator {
+        constructor(mainFreq) {
+          this.freqs = [];
+          this.phases = [];
+          for (let i = 0; i < 16; i++) {
+            let mult = 1 - (1 - Math.random() ** 0.5) * 0.7;
+            this.freqs.push(
+              Math.random() < 0.5 ? mainFreq * mult : mainFreq / mult
+            );
+            this.phases.push(Math.random());
+          }
+          oscs.push(this);
+        }
+        oscUpdate() {
+          let time = Date.now() - startTime;
+          let sum = 0;
+          for (let i = 0; i < 16; i++) {
+            sum += Math.sin(
+              (this.phases[i] + time * this.freqs[i]) * Math.PI * 2
+            );
+          }
+          this.value = sum / 16;
+        }
+      }
+
+      const paths = document.getElementsByTagName('path');
+      function update() {
+        oscs.forEach((o) => o.oscUpdate());
+        for (let i = 0; i < paths.length; i++) {
+          paths[i].setAttribute(
+            'd',
+            `M 0 .5 Q ${oscs[i * 4].value + 0.5} ${
+              oscs[i * 4 + 1].value * 0.4 + 0.5
+            } 1 .5 Q ${oscs[i * 4 + 2].value + 0.5} ${
+              oscs[i * 4 + 3].value * 0.4 + 0.5
+            } 0 .5`
+          );
+        }
+        requestAnimationFrame(update);
+      }
+      for (let i = 0; i < paths.length; i++) {
+        new RandomOscillator(0.00005);
+        new RandomOscillator(0.00025);
+        new RandomOscillator(0.00005);
+        new RandomOscillator(0.00025);
+      }
+      update();
+      class MicrophoneWidget {
+        constructor() {
+          this.openButton = document.getElementById('openButton');
+
+          this.largerWidget = document.getElementById('largerWidget');
+
+          this.speechContainer = document.getElementById('speechContainer');
+
+          this.accessText = document.getElementById('accessText');
+
+          this.accessMessage = document.querySelector('.access-message');
+          this.aiChatContainer = document.getElementById('aiChatContainer');
+          this.aiResponseContainer = document.getElementById(
+            'aiResponseContainer'
+          );
+
+          this.isAssistantOpen = false;
+
+          this.isMicrophoneAccessGranted = false;
+
+          this.finalTranscription = '';
+
+          this.interimTranscription = '';
+
+          this.isAiMessageVisible = false; // Initialize the flag
+
+          this.recognition = new webkitSpeechRecognition();
+
+          this.recognition.lang = 'en-US';
+
+          this.transcriptionInProgress = false; // Flag to track if transcription is in progress
+
+          this.recognition.continuous = true;
+
+          this.recognition.interimResults = true;
+
+          this.conversationContext = '';
+
+          this.recognition.onstart = function () {
+            console.log('Speech recognition started');
+          };
+
+          this.recognition.onend = function () {
+            console.log('Speech recognition ended');
+          };
+
+          this.recognition.onresult = (event) => {
+            var interimTranscript = '';
+
+            this.finalTranscription = this.interimTranscription; // Store the current interim transcription as final
+
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+              if (!event.results[i].isFinal) {
+                interimTranscript += event.results[i][0].transcript;
+              }
+            }
+
+            this.interimTranscription = interimTranscript;
+
+            this.updateDilationState();
+
+            if (
+              event.results[event.results.length - 1].isFinal &&
+              event.results[event.results.length - 1][0].transcript !== ''
+            ) {
+              //Stop Recording
+              this.recognition.onend = null;
+              this.recognition.stop();
+              console.log('Stopped transcribing to send data');
+              this.recording = false;
+              //Add to user Context EX) Hello -> User: "Hello" to conversationContext variable
+              this.appendToContext(
+                'User',
+                event.results[event.results.length - 1][0].transcript //User utterance
+              );
+              //Log the user utterance
+              console.log(
+                event.results[event.results.length - 1][0].transcript
+              );
+
+              this.sendUtteranceToServer(this.conversationContext)
+                .then((aiResponse) => {
+                  const messageTime = new Date();
+                  this.updateTimestamp(messageTime);
+
+                  console.log('Ai response is' + aiResponse); // This will log the resolved value, not the promise
+                  this.appendToContext('AI Assistant', aiResponse);
+                  this.updateChatContainer(aiResponse);
+
+                  console.log(this.conversationContext);
+                })
+                .catch((error) => {
+                  console.error('An error occurred:', error);
+                });
+            }
+          };
+          this.checkMicrophonePermission = () => {
+            navigator.permissions
+              .query({ name: 'microphone' })
+              .then((permissionStatus) => {
+                if (permissionStatus.state === 'granted') {
+                  this.isMicrophoneAccessGranted = true;
+                  this.accessMessage.style.display = 'none';
+                  this.speechContainer.style.display = 'block';
+                } else if (permissionStatus.state === 'denied') {
+                  this.isMicrophoneAccessGranted = false;
+                  this.accessMessage.innerText =
+                    'Microphone access denied. Please allow access in your browser settings.';
+                  this.accessMessage.style.display = 'block';
+                  this.speechContainer.style.display = 'none';
+                } else {
+                  this.isMicrophoneAccessGranted = false;
+                  this.accessMessage.style.display = 'block';
+                  this.speechContainer.style.display = 'none';
+                }
+              });
+          };
+
+          this.openButton.addEventListener('click', () => {
+            if (!this.isAssistantOpen) {
+              this.checkMicrophonePermission();
+
+              this.isAssistantOpen = true;
+
+              this.largerWidget.style.display = 'block';
+
+              this.largerWidget.style.animation =
+                'expandFromCorner 0.1s forwards';
+
+              if (!this.isMicrophoneAccessGranted) {
+                this.accessMessage.style.display = 'block';
+
+                this.speechContainer.style.display = 'none';
+
+                this.requestMicrophoneAccess();
+              } else {
+                this.accessText.style.display = 'none';
+
+                this.speechContainer.style.display = 'block';
+
+                this.recognition.lang = 'en-US';
+
+                this.recognition.onend = this.onEnd;
+                this.recognition.start();
+                this.recording = true;
+              }
+            } else {
+              this.isAssistantOpen = false;
+
+              if (this.isAiMessageVisible) {
+                this.aiChatContainer.style.animation = 'fadeOut 0.1s forwards';
+                this.isAiMessageVisible = false;
+              }
+
+              this.largerWidget.style.animation =
+                'shrinkToCorner 0.1s forwards';
+
+              // this.aiChatContainer.classList.add("fade-out");
+
+              this.recognition.onend = null;
+              this.recognition.stop();
+              console.log('Stopped transcribing as widget closed');
+              this.recording = false;
+
+              this.finalTranscription = '';
+
+              this.interimTranscription = '';
+              this.aiResponseContainer.textContent = '';
+
+              //Clears conversation context
+
+              this.conversationContext = '';
+
+              setTimeout(() => {
+                this.largerWidget.style.display = 'none';
+              }, 300);
+            }
+          });
+        }
+
+        appendToContext(speaker, message) {
+          this.conversationContext += `${speaker}: ${message}\n`;
+        }
+
+        updateChatContainer(aiResponse) {
+          const chatContainer = document.getElementById('aiResponseContainer');
+          chatContainer.textContent = aiResponse; // Update the text content of the chat container
+
+          var el = document.getElementById('aiChatContainer');
+          el.style.animation = 'none';
+          el.offsetHeight; /* trigger reflow */
+          el.style.animation = null;
+          // Trigger the expand animation
+          this.aiChatContainer.style.animation =
+            'expandAnimation 0.3s forwards';
+          this.isAiMessageVisible = true;
+
+          // Optional: If you want to automatically hide the container after some time
+          // setTimeout(() => {
+          //   chatContainer.classList.remove("active");
+          // }, 5000); // Adjust time as needed
+        }
+
+        updateTimestamp(messageTime) {
+          const currentTime = new Date();
+          const timeDiff = Math.round((currentTime - messageTime) / 60000); // Difference in minutes
+
+          const timestampElement = document.getElementById('timestamp');
+          if (timestampElement) {
+            if (timeDiff === 0) {
+              timestampElement.textContent = 'Bot · Just now';
+            } else if (timeDiff === 1) {
+              timestampElement.textContent = 'Bot · 1 minute ago';
+            } else {
+              timestampElement.textContent = `Bot · ${timeDiff} minutes ago`;
+            }
+          }
+        }
+        requestMicrophoneAccess() {
+          this.getLocalStream();
+        }
+
+        getLocalStream() {
+          navigator.mediaDevices
+
+            .getUserMedia({ video: false, audio: true })
+
+            .then((stream) => {
+              this.isMicrophoneAccessGranted = true;
+
+              this.accessMessage.style.display = 'none';
+
+              this.speechContainer.style.display = 'block';
+
+              this.recognition.lang = 'en-US';
+
+              this.recognition.onend = this.onEnd;
+              this.recognition.start();
+              this.recording = true;
+            })
+
+            .catch((err) => {
+              console.error(`Error accessing microphone: ${err}`);
+            });
+        }
+
+        async updateDilationState() {
+          const animateBalls = document.querySelectorAll('.animateball');
+
+          //   const interimTranscriptionElement = document.getElementById(
+          //     "interimTranscription"
+          //   );
+
+          if (this.interimTranscription.trim() !== '') {
+            if (!this.animationState) {
+              animateBalls.forEach((ball) => {
+                ball.style.animation =
+                  'dilate 1s ease-in-out infinite alternate';
+
+                this.animationState = true;
+              });
+            }
+
+            // interimTranscriptionElement.textContent = this.interimTranscription;
+          } else {
+            animateBalls.forEach((ball) => {
+              ball.style.animation = 'none';
+            });
+
+            this.animationState = false;
+          }
+
+          const finalTranscriptionElement =
+            document.getElementById('finalTranscription');
+
+          if (finalTranscriptionElement) {
+            finalTranscriptionElement.textContent = this.finalTranscription;
+          }
+        }
+        async sendUtteranceToServer(utterance) {
+          const userId = '"285e60be-3c5d-436b-972d-ea3283d04ba9"';
+          // Send the complete utterance to the server
+
+          const requestData = {
+            userInput: utterance,
+            userId: userId // Add this line to include the userId
+            // Change to match your server's expected format
+          };
+
+          try {
+            const response = await fetch(
+              'https://www.communicube.ai/api/chat',
+              // "http://localhost:3000/api/chat",
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+              }
+            );
+
+            const data = await response.json();
+            console.log(data);
+
+            if (!this.recognition) {
+              throw new Error('Recognition object not found.');
+            }
+
+            console.log('transcription sent, transcription starting');
+            this.recognition.onend = this.onEnd;
+            this.recognition.start();
+            this.recording = true;
+            console.log('Returns' + data.text);
+            return data.text;
+          } catch (error) {
+            console.error('Error:', error);
+
+            if (this.recognition) {
+              // If there's an error, check if recognition is not already started before restarting it
+              this.recognition.onend = this.onEnd;
+              this.recognition.start();
+              this.recording = true;
+            }
+          }
+        }
+
+        onEnd = () => {
+          console.log('Speech recognition has stopped. Starting again ...');
+          // if (!this.recognition) {
+          //   console.error("Recognition object not found.");
+
+          //   return;
+          // }
+          this.recognition.start();
+        };
+      }
+
+      // Create an instance of the MicrophoneWidget class
+
+      const microphoneWidget = new MicrophoneWidget();
+    </script>
+  </body>
+</html>
