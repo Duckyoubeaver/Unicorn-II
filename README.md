@@ -25,7 +25,6 @@ Usage instructions for the customers of the business who has already implemented
 
 ## Troubleshooting
 Issues you may encounter
---
 
 - **Denied access:** If you accidently denied access to microphone, simply go to the top left next to the website URL, and click site settings. Either allow access, or set to default if you want the website to ask again. 
 
