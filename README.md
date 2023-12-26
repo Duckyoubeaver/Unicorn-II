@@ -7,7 +7,7 @@ This voice assistant is made to answer customer queries, decrease customer suppo
 ## Core Features
 - Basically infinite data training on communicube.ai, overcoming the traditional token limits present on most generative AI models. 
 - Advanced Q & A functionality with the user.
-- Voice powered assistance, with automatic recognititon of a full 'utterance' as well as automatic muting when an utterance is being sent to the server. 
+- Voice powered assistance, with automatic recognititon of a full 'utterance' as well as automatic muting when an utterance is being sent to the server, and when the widget is closed.
 
 ## Implementation Steps
 Necessary steps to get the assistant working
