@@ -5,7 +5,7 @@
 This voice assistant is made to answer customer queries, decrease customer support ticket volume, and increase overall customer satisfaction. It does this by using an interactive and intuitive voice assistant that lives on the target website. When a user starts talking to the assistant a trained assistant will be able to search a vector database with semantic searching, primarily by using embeddings (numerical representation of words). When relevant context is fetched, the assistant will change context information and modify it to match the question asked. Feel free to try it out!
 
 ## Features
-- Basically infinite data training on communicube.ai, overcoming the traditional token limits present on most generative ai models. 
+- Basically infinite data training on communicube.ai, overcoming the traditional token limits present on most generative AI models. 
 - Advanced Q & A functionality with the user.
 - Voice powered assistance, with automatic recognititon of a full 'utterance' as well as automatic muting when an utterance is being sent to the server. 
 
