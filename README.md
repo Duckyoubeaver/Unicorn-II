@@ -1,4 +1,4 @@
-# Communicube Voice Assistant For Business Application!
+# Communicube Voice Assistant For Business Application
 
 ## Overview
 
